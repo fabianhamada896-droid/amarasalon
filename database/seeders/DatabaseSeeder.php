@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Memanggil seeder Amara Salon & Dekor
+        // Panggil seeder kamu di sini supaya otomatis ikut ke-seed
         $this->call([
             AmaraSeeder::class,
         ]);
