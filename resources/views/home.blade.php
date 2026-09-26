@@ -13,6 +13,7 @@
             <a href="{{ route('home') }}" class="hover:text-pink-600">Beranda</a>
             <a href="{{ route('layanan.index') }}" class="hover:text-pink-600">Layanan</a>
             <a href="{{ route('dekorasi.index') }}" class="hover:text-pink-600">Dekorasi</a>
+            <a href="{{ route('booking.riwayat') }}" class="hover:text-pink-600">Riwayat Pesanan</a>
             <a href="#" class="bg-pink-600 text-white px-4 py-2 rounded-lg">Login</a>
         </nav>
     </header>

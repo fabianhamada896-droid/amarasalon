@@ -7,21 +7,31 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 font-sans antialiased text-gray-800">
-    <!-- Navbar -->
-    <header class="bg-white sticky top-0 z-50 border-b border-gray-100 shadow-sm">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="/" class="text-2xl font-bold text-pink-600 tracking-tight">AMARA<span class="text-pink-400">.</span></a>
-            <div class="space-x-8 font-medium text-gray-600">
-                <a href="{{ route('home') }}" class="hover:text-pink-600 transition">Beranda</a>
-                <a href="{{ route('layanan.index') }}" class="hover:text-pink-600 transition">Layanan</a>
-                <a href="{{ route('dekorasi.index') }}" class="text-pink-600 font-semibold">Dekorasi</a>
-                <a href="#kontak" class="hover:text-pink-600 transition">Kontak</a>
-            </div>
-            <a href="#" class="bg-pink-600 hover:bg-pink-700 text-white px-5 py-2.5 rounded-full font-semibold text-sm transition duration-200">
-                Booking Sekarang
-            </a>
-        </nav>
-    </header>
+    <!-- Navbar dengan Tombol Back di Sebelah Kiri Logo -->
+<header class="bg-white shadow p-4 flex justify-between items-center px-8">
+    <div class="flex items-center space-x-4">
+        <!-- Tombol Back / Panah Kembali -->
+        <a href="javascript:history.back()" class="text-gray-600 hover:text-pink-600 transition p-1 rounded-full hover:bg-gray-100" title="Kembali">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+        </a>
+        <!-- Logo Brand -->
+        <h1 class="text-2xl font-bold text-pink-600">AMARA SALON & DEKOR</h1>
+    </div>
+
+    <!-- Menu Kanan -->
+    <nav class="flex items-center space-x-6 font-medium">
+        <div class="space-x-6">
+            <a href="{{ route('home') }}" class="hover:text-pink-600">Beranda</a>
+            <a href="{{ route('layanan.index') }}" class="hover:text-pink-600">Layanan</a>
+            <a href="{{ route('dekorasi.index') }}" class="hover:text-pink-600">Dekorasi</a>
+        </div>
+        <a href="#" class="border border-pink-600 text-pink-600 hover:bg-pink-50 px-4 py-1.5 rounded-lg text-sm font-semibold transition">
+            Login
+        </a>
+    </nav>
+</header>
 
     <!-- Konten Utama Dekorasi -->
     <main class="container mx-auto px-6 py-12">
@@ -62,8 +72,9 @@
                     </div>
 
                     <!-- Tombol Aksi -->
-                    <a href="#" class="block w-full text-center bg-pink-600 hover:bg-pink-700 text-white font-semibold py-4 px-6 rounded-2xl transition duration-200 transform group-hover:-translate-y-0.5 shadow-md group-hover:shadow-pink-200/50">
-                        Pilih Dekorasi Ini
+                   <a href="{{ route('booking.create', $dekorasi->id_dekorasi) }}?type=dekorasi" class="bg-pink-600 text-white px-4 py-2 rounded-xl">
+                        Pesan Dekorasi Ini
+                    </a>
                     </a>
                 </div>
             </div>

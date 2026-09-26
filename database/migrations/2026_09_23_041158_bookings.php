@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id('id_booking');
             $table->string('kode_booking', 20)->unique(); // Contoh: #AMR001
-            $table->foreignId('id_user')->constrained('users', 'id_user')->onDelete('cascade');
+           $table->foreignId('id_user')->constrained('users', 'id')->onDelete('cascade');
             $table->date('tanggal_booking');
             $table->time('jam_booking');
             $table->decimal('total_harga', 12, 2);
