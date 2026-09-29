@@ -48,10 +48,16 @@ RUN composer install \
     --optimize-autoloader \
     --no-interaction
 
-# Permissions
+# Permissions (Termasuk folder storage, bootstrap/cache, dan database SQLite agar tidak read-only)
 RUN chown -R www-data:www-data \
     /var/www/html/storage \
-    /var/www/html/bootstrap/cache
+    /var/www/html/bootstrap/cache \
+    /var/www/html/database \
+    && chmod -R 775 \
+    /var/www/html/storage \
+    /var/www/html/bootstrap/cache \
+    /var/www/html/database \
+    && chmod 664 /var/www/html/database/database.sqlite
 
 # Custom Apache startup
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
