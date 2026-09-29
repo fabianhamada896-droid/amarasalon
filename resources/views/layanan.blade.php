@@ -29,7 +29,7 @@
             <a href="{{ route('layanan.index') }}" class="hover:text-pink-600">Layanan</a>
             <a href="{{ route('dekorasi.index') }}" class="hover:text-pink-600">Dekorasi</a>
         </div>
-        <a href="#" class="border border-pink-600 text-pink-600 hover:bg-pink-50 px-4 py-1.5 rounded-lg text-sm font-semibold transition">
+        <a href="{{ route ('login') }}" class="border border-pink-600 text-pink-600 hover:bg-pink-50 px-4 py-1.5 rounded-lg text-sm font-semibold transition">
             Login
         </a>
     </nav>

@@ -1,11 +1,15 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Layanan;
 use App\Models\Dekorasi;
 use App\Models\Booking;
+use App\Models\Pembayaran;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -30,7 +34,7 @@ class BookingController extends Controller
     }
 
     // Menyimpan data pemesanan ke database
-  public function store(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'id_item' => 'required',
@@ -38,16 +42,6 @@ class BookingController extends Controller
             'tanggal_acara' => 'required|date',
             'catatan' => 'nullable|string',
         ]);
-
-        // AMAN: Pastikan user ID 1 otomatis ada di database agar tidak foreign key error
-        \App\Models\User::firstOrCreate(
-            ['id' => 1],
-            [
-                'name' => 'Maman',
-                'email' => 'maman@example.com',
-                'password' => bcrypt('password')
-            ]
-        );
 
         // Ambil harga berdasarkan tipe
         if ($request->tipe == 'dekorasi') {
@@ -58,9 +52,10 @@ class BookingController extends Controller
             $harga = $item->harga;
         }
 
+        // Simpan booking menggunakan ID user yang sedang login
         Booking::create([
             'kode_booking' => 'AMR' . rand(100, 999),
-            'id_user' => 1,
+            'id_user' => Auth::id(), // <-- Mengambil ID user dari session yang aktif
             'tanggal_booking' => $request->tanggal_acara,
             'jam_booking' => '10:00:00',
             'total_harga' => $harga,
@@ -74,12 +69,51 @@ class BookingController extends Controller
     }
 
     // Menampilkan riwayat pesanan user
+    // Menampilkan riwayat pesanan user
     public function index()
     {
-        // Ambil data booking milik user yang sedang login (sementara hardcode id_user = 1)
-        // Urutkan dari yang paling baru menggunakan latest() atau orderBy('created_at', 'desc')
-        $bookings = Booking::where('id_user', 1)->latest()->get();
+        // UBAH: dari where('id_user', 1) menjadi Auth::id()
+        $bookings = Booking::with('pembayarans')
+            ->where('id_user', Auth::id())
+            ->latest()
+            ->get();
 
         return view('riwayat', compact('bookings'));
+    }
+
+    // 2. Tambahkan method baru untuk proses upload
+    public function uploadPembayaran(Request $request, $id)
+    {
+        $request->validate([
+            'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $booking = Booking::findOrFail($id);
+
+        if ($request->hasFile('bukti_pembayaran')) {
+            $file = $request->file('bukti_pembayaran');
+            $filename = time() . '_' . $booking->kode_booking . '.' . $file->getClientOriginalExtension();
+            
+            // Simpan gambar ke folder storage/app/public/bukti_pembayaran
+           $file->storeAs('bukti_pembayaran', $filename, 'public');
+
+            // Simpan record ke tabel pembayarans
+            Pembayaran::create([
+                'id_booking' => $booking->id_booking,
+                'jumlah_bayar' => $booking->total_harga,
+                'metode_pembayaran' => 'Transfer',
+                'jenis_pembayaran' => 'DP',
+                'bukti_pembayaran' => $filename,
+                'tanggal_bayar' => now(),
+                'status_pembayaran' => 'Pending',
+            ]);
+
+            // Update status booking
+            $booking->update([
+                'status_booking' => 'Menunggu',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Bukti pembayaran berhasil diupload! Menunggu verifikasi admin.');
     }
 }

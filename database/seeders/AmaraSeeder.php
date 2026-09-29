@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Layanan;
 use App\Models\Dekorasi;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class AmaraSeeder extends Seeder
 {
@@ -15,17 +13,7 @@ class AmaraSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Buat User dummy agar relasi id_user (foreign key) aman saat booking
-        User::firstOrCreate(
-            ['id' => 1],
-            [
-                'name' => 'Maman',
-                'email' => 'maman@example.com',
-                'password' => Hash::make('password'),
-            ]
-        );
-
-        // 2. Daftar list layanan salon
+        // 1. Daftar list layanan salon
         Layanan::create([
             'nama_layanan' => 'Makeup Pengantin Tradisional',
             'kategori' => 'Makeup',
@@ -50,7 +38,7 @@ class AmaraSeeder extends Seeder
             'durasi' => 180,
         ]);
 
-        // 3. Daftar list dekorasi
+        // 2. Daftar list dekorasi
         Dekorasi::create([
             'nama_paket' => 'Paket Akad Minimalis',
             'jenis_dekorasi' => 'Akad Nikah',

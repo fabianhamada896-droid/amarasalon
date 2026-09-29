@@ -5,8 +5,17 @@
     <title>Dashboard Admin - Amara Salon</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-6">
-    <div class="max-w-6xl mx-auto">
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
+        <header class="bg-white shadow px-8 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-pink-600">Admin - Amara Salon & Dekor</h1>
+            <nav class="space-x-4">
+                <a href="{{ route('admin.dashboard') }}" class="hover:text-pink-600">Dashboard</a>
+                <a href="{{ route('admin.pembayaran.index') }}" class="hover:text-pink-600">Verifikasi Pembayaran</a>
+                <a href="{{ route('home') }}" class="hover:text-pink-600">Lihat Website</a>
+                <a href="{{ route('admin.katalog.index') }}" class="hover:text-pink-600">Kelola Katalog</a>
+            </nav>
+        </header>
+    <div class="max-w-6xl mx-auto px-6 py-8 flex-1">
         <h1 class="text-3xl font-bold mb-6">Dashboard Admin Amara Salon</h1>
         
         <div class="grid grid-cols-4 gap-4 mb-8">

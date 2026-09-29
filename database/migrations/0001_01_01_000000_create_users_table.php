@@ -9,12 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+   public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_user'); // Menggunakan id_user sebagai primary key
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('no_hp')->nullable();
+            $table->enum('role', ['admin', 'customer'])->default('customer'); // Role untuk bedakan Admin & Customer
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

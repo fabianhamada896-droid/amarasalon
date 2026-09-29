@@ -6,13 +6,10 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Panggil seeder kamu di sini supaya otomatis ikut ke-seed
         $this->call([
+            UserSeeder::class,
             AmaraSeeder::class,
         ]);
     }

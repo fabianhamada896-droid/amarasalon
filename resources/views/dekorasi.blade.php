@@ -27,11 +27,24 @@
             <a href="{{ route('layanan.index') }}" class="hover:text-pink-600">Layanan</a>
             <a href="{{ route('dekorasi.index') }}" class="hover:text-pink-600">Dekorasi</a>
         </div>
-        <a href="#" class="border border-pink-600 text-pink-600 hover:bg-pink-50 px-4 py-1.5 rounded-lg text-sm font-semibold transition">
-            Login
-        </a>
-    </nav>
-</header>
+        @guest
+            <!-- Tampil jika belum login -->
+            <a href="{{ route('login') }}" class="border border-pink-600 text-pink-600 hover:bg-pink-50 px-4 py-1.5 rounded-lg text-sm font-semibold transition">
+                Login
+            </a>
+        @endguest
+
+        @auth
+            <!-- Tampil jika sudah login -->
+            <form action="{{ route('logout') }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-1.5 rounded-lg text-sm font-semibold transition">
+                    Logout ({{ Auth::user()->name }})
+                </button>
+            </form>
+        @endauth
+            </nav>
+        </header>
 
     <!-- Konten Utama Dekorasi -->
     <main class="container mx-auto px-6 py-12">
