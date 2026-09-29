@@ -30,11 +30,10 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}/!g' /etc/apache2/apache2.conf
 
-# Force Apache to use prefork MPM only (Fix More than one MPM loaded error)
-RUN rm -f /etc/apache2/mods-enabled/mpm_event.load \
-    /etc/apache2/mods-enabled/mpm_event.conf \
-    /etc/apache2/mods-enabled/mpm_worker.load \
-    /etc/apache2/mods-enabled/mpm_worker.conf \
+# Fix Apache MPM conflict for PHP 8.4 explicitly
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && rm -f /etc/apache2/mods-enabled/mpm_event.* \
+    && rm -f /etc/apache2/mods-enabled/mpm_worker.* \
     && a2enmod mpm_prefork
 
 # Enable Apache Rewrite Module
