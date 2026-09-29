@@ -30,7 +30,7 @@ WORKDIR /var/www/html
 # Copy Laravel project
 COPY . /var/www/html
 
-# Laravel public folder as Apache DocumentRoot
+# Laravel public directory
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
@@ -39,13 +39,10 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}/!g' \
     /etc/apache2/apache2.conf
 
-# Fix Apache MPM
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && a2dismod mpm_event mpm_worker mpm_prefork \
-    && a2enmod mpm_prefork \
-    && a2enmod rewrite
+# Server name
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Install Laravel dependencies
+# Composer
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
@@ -56,4 +53,10 @@ RUN chown -R www-data:www-data \
     /var/www/html/storage \
     /var/www/html/bootstrap/cache
 
-EXPOSE 80
+# Custom Apache startup
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Start container through our script
+CMD ["/usr/local/bin/docker-entrypoint.sh"]
