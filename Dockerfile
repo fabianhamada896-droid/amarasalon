@@ -30,25 +30,25 @@ WORKDIR /var/www/html
 # Copy Laravel project
 COPY . /var/www/html
 
-# Laravel public directory
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+# Set Apache DocumentRoot directly to Laravel public folder
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/000-default.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}/!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
-    /etc/apache2/sites-available/*.conf
-
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}/!g' \
-    /etc/apache2/apache2.conf
+# Enable Apache Rewrite Module & AllowOverride
+RUN a2enmod rewrite
+RUN sed -i '/<Directory \/var\/www\/html\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 # Server name
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Composer
+# Composer install dependencies
 RUN composer install \
     --no-dev \
     --optimize-autoloader \
     --no-interaction
 
-# Permissions (Termasuk folder storage, bootstrap/cache, dan database SQLite agar tidak read-only)
+# Permissions for storage, bootstrap cache, and database
 RUN chown -R www-data:www-data \
     /var/www/html/storage \
     /var/www/html/bootstrap/cache \
@@ -59,14 +59,9 @@ RUN chown -R www-data:www-data \
     /var/www/html/database \
     && chmod 664 /var/www/html/database/database.sqlite
 
-# Custom Apache startup
+# Custom Apache startup script copy
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Start container through our script
 CMD ["/usr/local/bin/docker-entrypoint.sh"]
-
-# Enable Apache Rewrite Module and AllowOverride
-RUN a2enmod rewrite
-RUN sed -i '/<Directory \/var\/www\/html\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
