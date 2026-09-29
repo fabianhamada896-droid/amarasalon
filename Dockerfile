@@ -66,3 +66,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Start container through our script
 CMD ["/usr/local/bin/docker-entrypoint.sh"]
+
+# Enable Apache Rewrite Module and AllowOverride
+RUN a2enmod rewrite
+RUN sed -i '/<Directory \/var\/www\/html\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
