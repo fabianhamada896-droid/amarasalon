@@ -30,6 +30,9 @@ ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}/!g' /etc/apache2/apache2.conf
 
+# Fix Apache MPM conflict error in PHP 8.4
+RUN a2dismod mpm_event && a2enmod mpm_prefork
+
 # Enable Apache Rewrite Module
 RUN a2enmod rewrite
 
