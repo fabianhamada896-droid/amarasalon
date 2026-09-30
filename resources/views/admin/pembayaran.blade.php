@@ -65,7 +65,7 @@
                                 </td>
                                 <td class="p-4">
                                     @if($p->bukti_pembayaran)
-                                       <a href="{{ Storage::url('bukti_pembayaran/' . $p->bukti_pembayaran) }}" target="_blank" class="inline-flex items-center text-pink-600 hover:underline font-semibold">
+                                       <a href="{{ asset('bukti_pembayaran/' . $p->bukti_pembayaran) }}" target="_blank" class="inline-flex items-center text-pink-600 hover:underline font-semibold">
                                             🔍 Lihat Foto
                                         </a>
                                     @else
