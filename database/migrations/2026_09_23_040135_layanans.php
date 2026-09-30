@@ -11,10 +11,11 @@ return new class extends Migration
         Schema::create('layanans', function (Blueprint $table) {
             $table->id('id_layanan');
             $table->string('nama_layanan', 100);
-            $table->string('kategori', 50); // Contoh: Makeup, Hairdo, Hijab, dll
+            $table->string('kategori', 50); 
             $table->decimal('harga', 12, 2);
-            $table->integer('durasi')->nullable(); // dalam satuan menit
+            $table->integer('durasi')->nullable(); 
             $table->text('deskripsi')->nullable();
+            $table->string('foto')->nullable(); // <-- Kolom foto
             $table->timestamps();
         });
     }

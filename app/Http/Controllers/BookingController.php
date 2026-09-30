@@ -10,6 +10,7 @@ use App\Models\Booking;
 use App\Models\Pembayaran;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage; // <-- Tambahkan facade Storage jika diperlukan untuk hapus/kelola foto
 
 class BookingController extends Controller
 {
@@ -69,10 +70,8 @@ class BookingController extends Controller
     }
 
     // Menampilkan riwayat pesanan user
-    // Menampilkan riwayat pesanan user
     public function index()
     {
-        // UBAH: dari where('id_user', 1) menjadi Auth::id()
         $bookings = Booking::with('pembayarans')
             ->where('id_user', Auth::id())
             ->latest()
@@ -81,7 +80,7 @@ class BookingController extends Controller
         return view('riwayat', compact('bookings'));
     }
 
-    // 2. Tambahkan method baru untuk proses upload
+    // Method untuk proses upload bukti pembayaran
     public function uploadPembayaran(Request $request, $id)
     {
         $request->validate([
@@ -95,7 +94,7 @@ class BookingController extends Controller
             $filename = time() . '_' . $booking->kode_booking . '.' . $file->getClientOriginalExtension();
             
             // Simpan gambar ke folder storage/app/public/bukti_pembayaran
-           $file->storeAs('bukti_pembayaran', $filename, 'public');
+            $file->storeAs('bukti_pembayaran', $filename, 'public');
 
             // Simpan record ke tabel pembayarans
             Pembayaran::create([
@@ -115,5 +114,33 @@ class BookingController extends Controller
         }
 
         return redirect()->back()->with('success', 'Bukti pembayaran berhasil diupload! Menunggu verifikasi admin.');
+    }
+
+    // =========================================================================
+    // TAMBAHKAN CONTOH METHOD INI JIKA ANDA INGIN MENYIMPAN LAYANAN/DEKORASI + FOTO
+    // (Sesuaikan dengan Controller tempat Anda mengelola data Layanan/Dekorasi)
+    // =========================================================================
+    public function storeLayananAtauDekorasi(Request $request)
+    {
+       if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+
+            $namaFileFoto = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            $file->storeAs('layanan', $namaFileFoto, 'public');
+
+            $namaFileFoto = 'layanan/' . $namaFileFoto;
+        }
+
+        Layanan::create([
+            'nama_layanan' => $request->nama_layanan,
+            'kategori' => $request->kategori,
+            'harga' => $request->harga,
+            'durasi' => $request->durasi,
+            'deskripsi' => $request->deskripsi,
+            'foto' => $namaFileFoto,
+        ]);
+
+        return redirect()->back()->with('success', 'Layanan dan foto berhasil ditambahkan!');
     }
 }

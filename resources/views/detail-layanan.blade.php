@@ -27,11 +27,12 @@
             <a href="{{ route('layanan.index') }}" class="hover:text-pink-600">Layanan</a>
             <a href="{{ route('dekorasi.index') }}" class="hover:text-pink-600">Dekorasi</a>
         </div>
-        <a href="#" class="border border-pink-600 text-pink-600 hover:bg-pink-50 px-4 py-1.5 rounded-lg text-sm font-semibold transition">
+        <a href="{{ route('login') }}" class="border border-pink-600 text-pink-600 hover:bg-pink-50 px-4 py-1.5 rounded-lg text-sm font-semibold transition">
             Login
         </a>
     </nav>
 </header>
+
     <!-- Konten Detail Layanan -->
     <main class="container mx-auto px-8 py-10 max-w-4xl">
         
@@ -46,28 +47,42 @@
         </div>
 
         <!-- Kartu Detail -->
-        <div class="bg-white rounded-2xl shadow-md p-8 border border-gray-100">
-            <span class="inline-block bg-pink-100 text-pink-600 text-xs font-bold px-3 py-1 rounded-full uppercase mb-4">
-                {{ $layanan->kategori }}
-            </span>
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-4">{{ $layanan->nama_layanan }}</h2>
-            <p class="text-gray-600 text-base leading-relaxed mb-6">{{ $layanan->deskripsi }}</p>
-
-            <div class="flex items-center justify-between border-t border-gray-100 pt-6">
-                <div>
-                    <span class="text-xs text-gray-500 block">Harga Layanan</span>
-                    <span class="text-2xl font-bold text-pink-600">Rp {{ number_format($layanan->harga, 0, ',', '.') }}</span>
+        <div class="bg-white rounded-3xl shadow-md overflow-hidden border border-gray-100">
+            
+            {{-- FOTO UTAMA UKURAN BESAR --}}
+            @if($layanan->foto)
+                <div class="w-full h-80 bg-gray-100 overflow-hidden">
+                    <img src="{{ asset('storage/' . $layanan->foto) }}" alt="{{ $layanan->nama_layanan }}" class="w-full h-full object-cover">
                 </div>
-                <div>
-                    <span class="text-xs text-gray-500 block">Estimasi Durasi</span>
-                    <span class="text-lg font-semibold text-gray-800">{{ $layanan->durasi }} Menit</span>
+            @else
+                <div class="w-full h-80 bg-gray-100 flex items-center justify-center text-gray-400 text-base font-medium">
+                    Tidak Ada Foto Tersedia
                 </div>
-            </div>
+            @endif
 
-            <div class="mt-8">
-                <a href="{{ route('booking.create', $layanan->id_layanan) }}" class="block w-full text-center bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3 rounded-xl transition shadow">
-                    Booking Layanan Ini
-                </a>
+            <div class="p-8 sm:p-10">
+                <span class="inline-block bg-pink-100 text-pink-600 text-xs font-bold px-3 py-1 rounded-full uppercase mb-4">
+                    {{ $layanan->kategori }}
+                </span>
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-4">{{ $layanan->nama_layanan }}</h2>
+                <p class="text-gray-600 text-base leading-relaxed mb-6">{{ $layanan->deskripsi }}</p>
+
+                <div class="flex items-center justify-between border-t border-gray-100 pt-6">
+                    <div>
+                        <span class="text-xs text-gray-500 block">Harga Layanan</span>
+                        <span class="text-2xl font-bold text-pink-600">Rp {{ number_format($layanan->harga, 0, ',', '.') }}</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gray-500 block">Estimasi Durasi</span>
+                        <span class="text-lg font-semibold text-gray-800">{{ $layanan->durasi }} Menit</span>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <a href="{{ route('booking.create', $layanan->id_layanan) }}" class="block w-full text-center bg-pink-600 hover:bg-pink-700 text-white font-semibold py-3.5 rounded-xl transition shadow">
+                        Booking Layanan Ini
+                    </a>
+                </div>
             </div>
         </div>
     </main>

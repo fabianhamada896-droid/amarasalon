@@ -13,44 +13,51 @@ class AmaraSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Daftar list layanan salon
+        // 1. Daftar list layanan salon (tambahkan 'foto')
         Layanan::create([
-            'nama_layanan' => 'Makeup Pengantin Tradisional',
+            'nama_layanan' => 'Makeup Akad',
             'kategori' => 'Makeup',
-            'deskripsi' => 'Riasan pengantin tradisional lengkap dengan paes atau sunting berkualitas tinggi dan tahan seharian.',
-            'harga' => 2500000,
+            'deskripsi' => 'Free Softlens.',
+            'harga' => 1000000,
             'durasi' => 120,
+            'foto' => 'layanan/layanan1.png', // Sesuaikan dengan nama file di storage/app/public/layanan/
         ]);
 
         Layanan::create([
             'nama_layanan' => 'Hairdo & Styling Modern',
             'kategori' => 'Hair',
             'deskripsi' => 'Penataan rambut profesional untuk acara wisuda, pesta, atau kondangan dengan hasil tahan lama.',
-            'harga' => 350000,
+            'harga' => 200000,
             'durasi' => 60,
+            'foto' => 'layanan/layanan2.png',
         ]);
 
-        Layanan::create([
-            'nama_layanan' => 'Dekorasi Akad Nikah Minimalis',
-            'kategori' => 'Dekorasi',
-            'deskripsi' => 'Paket dekorasi pelaminan modern minimalis untuk acara akad nikah di rumah atau gedung.',
-            'harga' => 4500000,
-            'durasi' => 180,
-        ]);
-
-        // 2. Daftar list dekorasi
+        // 2. Daftar list dekorasi (tambahkan 'foto')
         Dekorasi::create([
-            'nama_paket' => 'Paket Akad Minimalis',
+            'nama_paket' => 'Paket Engagment',
+            'jenis_dekorasi' => 'Repsesi',
+            'deskripsi' => 'Dekorasi
+            Makeup.',
+            'harga' => 1000000,
+            'foto' => 'dekorasi/dekorasi2.png', // Sesuaikan dengan nama file di storage/app/public/dekorasi/
+        ]);
+
+        Dekorasi::create([
+            'nama_paket' => 'Paket Minimalis',
             'jenis_dekorasi' => 'Akad Nikah',
-            'deskripsi' => 'Paket pelaminan modern minimalis untuk acara akad di rumah maupun gedung.',
-            'harga' => 4500000,
+            'deskripsi' => 'Dekorasi Minimalis
+            Makeup
+            Satu Set Alat Parasmanan.',
+            'harga' => 2000000,
+            'foto' => 'dekorasi/dekorasi2.png',
         ]);
 
-        Dekorasi::create([
-            'nama_paket' => 'Paket Resepsi Rustic',
-            'jenis_dekorasi' => 'Resepsi',
-            'deskripsi' => 'Konsep dekorasi pelaminan gaya rustic dengan sentuhan kayu dan bunga segar.',
-            'harga' => 8500000,
+         Dekorasi::create([
+            'nama_paket' => 'Paket Standar',
+            'jenis_dekorasi' => 'Akad Nikah',
+            'deskripsi' => 'Dekorasi,Pelaminan 6meter,Makeup Pengantin,Satu Pasang Baju Akad,Siger Aksesoris Melati,Set Alat Parasmanan dan Alat Makan 100,Hena dan Nail Art,Free Softlens.',
+            'harga' => 2000000,
+            'foto' => 'dekorasi/dekorasi2.png',
         ]);
     }
 }

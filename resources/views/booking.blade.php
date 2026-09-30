@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Booking - Amara Salon & Dekor</title>
+    <title>Formulir Pemesanan - Amara Salon & Dekor</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 font-sans antialiased text-gray-800">
@@ -26,44 +26,74 @@
         </nav>
     </header>
 
-    <!-- Konten Form Booking -->
-    <main class="container mx-auto px-8 py-10 max-w-2xl">
-        <div class="bg-white rounded-3xl shadow-lg p-8 border border-gray-50">
-            <h2 class="text-3xl font-extrabold text-gray-900 mb-2">Formulir Pemesanan</h2>
-            <p class="text-gray-600 mb-8">Lengkapi detail di bawah ini untuk memesan pilihan Anda.</p>
+    <!-- Konten Utama Detail & Form Booking -->
+    <main class="container mx-auto px-6 py-10 max-w-2xl">
+        <div class="bg-white rounded-3xl shadow-lg overflow-hidden border border-gray-50">
+            
+            <!-- Bagian Foto (Mirip Detail Layanan) -->
+            @if($item->foto)
+                <div class="w-full h-72 bg-gray-100 overflow-hidden">
+                    <img src="{{ asset('storage/' . $item->foto) }}" alt="{{ $item->nama_item }}" class="w-full h-full object-cover">
+                </div>
+            @else
+                <div class="w-full h-72 bg-gray-100 flex items-center justify-center text-gray-400 font-medium">
+                    Tidak Ada Foto Tersedia
+                </div>
+            @endif
 
-            <!-- Ringkasan Item (Sudah disamakan jadi $item->nama_item dan $item->kategori_item di Controller) -->
-            <div class="bg-pink-50 rounded-2xl p-6 mb-8 border border-pink-100">
-                <span class="text-xs bg-pink-200 text-pink-700 font-bold px-3 py-1 rounded-full uppercase">
+            <!-- Konten Detail & Form -->
+            <div class="p-8">
+                <!-- Badge Kategori -->
+                <div class="inline-block bg-pink-50 text-pink-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
                     {{ $item->kategori_item }}
-                </span>
-                <h3 class="text-xl font-bold text-gray-900 mt-3 mb-1">
+                </div>
+
+                <!-- Nama Item -->
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-2">
                     {{ $item->nama_item }}
-                </h3>
-                <p class="text-pink-600 font-extrabold text-lg">Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
+                </h2>
+
+                <!-- Deskripsi (Opsional, kalau datanya ada di controller) -->
+                @if(isset($item->deskripsi))
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        {{ $item->deskripsi }}
+                    </p>
+                @else
+                    <p class="text-gray-600 mb-6 leading-relaxed">
+                        Silakan lengkapi formulir tanggal dan catatan di bawah untuk melanjutkan pemesanan paket ini.
+                    </p>
+                @endif
+
+                <!-- Harga -->
+                <div class="flex items-center justify-between py-4 border-t border-b border-gray-100 mb-8">
+                    <div>
+                        <span class="text-xs text-gray-400 font-medium block">Total Harga</span>
+                        <span class="text-2xl font-extrabold text-pink-600">Rp {{ number_format($item->harga, 0, ',', '.') }}</span>
+                    </div>
+                </div>
+
+                <!-- Form Input Booking -->
+                <form action="{{ route('booking.store') }}" method="POST">
+                    @csrf
+                    <!-- Mengirim ID item umum dan Tipe ke Controller -->
+                    <input type="hidden" name="id_item" value="{{ $item->id_dekorasi ?? $item->id_layanan }}">
+                    <input type="hidden" name="tipe" value="{{ $tipe }}">
+
+                    <div class="mb-6">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal & Waktu Acara</label>
+                        <input type="date" name="tanggal_acara" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-pink-600 transition">
+                    </div>
+
+                    <div class="mb-8">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Catatan Tambahan (Opsional)</label>
+                        <textarea name="catatan" rows="4" placeholder="Tuliskan catatan khusus untuk pesanan Anda..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-pink-600 transition"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-4 px-6 rounded-2xl transition duration-200 shadow-md shadow-pink-200">
+                        Konfirmasi & Kirim Pesanan
+                    </button>
+                </form>
             </div>
-
-            <!-- Form Input -->
-            <form action="{{ route('booking.store') }}" method="POST">
-                @csrf
-                <!-- Mengirim ID item umum dan Tipe ke Controller -->
-                <input type="hidden" name="id_item" value="{{ $item->id_dekorasi ?? $item->id_layanan }}">
-                <input type="hidden" name="tipe" value="{{ $tipe }}">
-
-                <div class="mb-6">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal & Waktu Acara</label>
-                    <input type="date" name="tanggal_acara" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-pink-600 transition">
-                </div>
-
-                <div class="mb-8">
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">Catatan Tambahan (Opsional)</label>
-                    <textarea name="catatan" rows="4" placeholder="Tuliskan catatan khusus untuk pesanan Anda..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:border-pink-600 transition"></textarea>
-                </div>
-
-                <button type="submit" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-semibold py-4 px-6 rounded-2xl transition duration-200 shadow-md shadow-pink-200">
-                    Konfirmasi & Kirim Pesanan
-                </button>
-            </form>
         </div>
     </main>
 </body>

@@ -7,11 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Dekorasi extends Model
 {
     protected $table = 'dekorasis';
+
     protected $primaryKey = 'id_dekorasi';
-    protected $fillable = ['nama_paket', 'jenis_dekorasi', 'harga', 'deskripsi'];
+
+    protected $fillable = [
+        'nama_paket',
+        'jenis_dekorasi',
+        'harga',
+        'deskripsi',
+        'foto',
+    ];
 
     public function bookingDekorasis()
     {
-        return $this->hasMany(BookingDekorasi::class, 'id_dekorasi', 'id_dekorasi');
+        return $this->hasMany(
+            BookingDekorasi::class,
+            'id_dekorasi',
+            'id_dekorasi'
+        );
     }
 }

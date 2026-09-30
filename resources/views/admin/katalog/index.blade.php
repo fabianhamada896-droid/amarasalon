@@ -18,7 +18,7 @@
             </nav>
         </header>
 
-<div class="container mx-auto  px-6 py-8 flex-1">
+<div class="container mx-auto px-6 py-8 flex-1">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Kelola Katalog (Layanan & Dekorasi)</h1>
 
     @if(session('success'))
@@ -35,7 +35,8 @@
             {{-- Form Tambah Layanan --}}
             <div class="bg-white rounded-3xl shadow-md p-6 border border-gray-100">
                 <h3 class="text-xl font-bold text-pink-600 mb-4">➕ Tambah Layanan Baru</h3>
-                <form action="{{ route('admin.layanan.store') }}" method="POST" class="space-y-4">
+                {{-- PASTIKAN ENCTYPE ADA DI SINI --}}
+                <form action="{{ route('admin.layanan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Nama Layanan</label>
@@ -54,6 +55,10 @@
                         <input type="number" name="durasi" placeholder="Contoh: 90" min="0" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-pink-500">
                     </div>
                     <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Foto Layanan</label>
+                        <input type="file" name="foto" accept="image/*" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-pink-500 bg-gray-50">
+                    </div>
+                    <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Deskripsi</label>
                         <textarea name="deskripsi" rows="3" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-pink-500"></textarea>
                     </div>
@@ -68,6 +73,7 @@
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="border-b text-gray-500">
+                                <th class="py-2 px-3">Foto</th>
                                 <th class="py-2 px-3">Nama</th>
                                 <th class="py-2 px-3">Harga / Durasi</th>
                                 <th class="py-2 px-3 text-center">Aksi</th>
@@ -76,6 +82,13 @@
                         <tbody>
                             @foreach($layanans as $l)
                             <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-3">
+                                    @if($l->foto)
+                                        <img src="{{ asset('storage/' . $l->foto) }}" alt="{{ $l->nama_layanan }}" class="w-12 h-12 object-cover rounded-lg">
+                                    @else
+                                        <span class="text-xs text-gray-400 italic">No Image</span>
+                                    @endif
+                                </td>
                                 <td class="py-3 px-3 font-medium text-gray-900">{{ $l->nama_layanan }}</td>
                                 <td class="py-3 px-3">
                                     <div class="text-pink-600 font-semibold">Rp {{ number_format($l->harga, 0, ',', '.') }}</div>
@@ -101,7 +114,7 @@
             {{-- Form Tambah Dekorasi --}}
             <div class="bg-white rounded-3xl shadow-md p-6 border border-gray-100">
                 <h3 class="text-xl font-bold text-pink-600 mb-4">➕ Tambah Paket Dekorasi</h3>
-                <form action="{{ route('admin.dekorasi.store') }}" method="POST" class="space-y-4">
+                <form action="{{ route('admin.dekorasi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Nama Paket</label>
@@ -124,6 +137,10 @@
                         <input type="text" name="kelengkapan" placeholder="Contoh: Backdrop, Bunga Segar, Kursi Pengantin" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-pink-500">
                     </div>
                     <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Foto Dekorasi</label>
+                        <input type="file" name="foto" accept="image/*" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-pink-500 bg-gray-50">
+                    </div>
+                    <div>
                         <label class="block text-xs font-bold text-gray-700 mb-1">Deskripsi</label>
                         <textarea name="deskripsi" rows="3" class="w-full border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-pink-500"></textarea>
                     </div>
@@ -138,6 +155,7 @@
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
                             <tr class="border-b text-gray-500">
+                                <th class="py-2 px-3">Foto</th>
                                 <th class="py-2 px-3">Nama Paket / Jenis</th>
                                 <th class="py-2 px-3">Harga / Detail</th>
                                 <th class="py-2 px-3 text-center">Aksi</th>
@@ -147,12 +165,19 @@
                             @foreach($dekorasis as $d)
                             <tr class="border-b hover:bg-gray-50">
                                 <td class="py-3 px-3">
+                                    @if($d->foto)
+                                        <img src="{{ asset('storage/' . $d->foto) }}" alt="{{ $d->nama_paket }}" class="w-12 h-12 object-cover rounded-lg">
+                                    @else
+                                        <span class="text-xs text-gray-400 italic">No Image</span>
+                                    @endif
+                                </td>
+                                <td class="py-3 px-3">
                                     <div class="font-medium text-gray-900">{{ $d->nama_paket }}</div>
                                     <div class="text-xs text-gray-500">Jenis: {{ $d->jenis_dekorasi }}</div>
                                 </td>
                                 <td class="py-3 px-3">
                                     <div class="text-pink-600 font-semibold">Rp {{ number_format($d->harga, 0, ',', '.') }}</div>
-                                    <div class="text-xs text-gray-400">🛠️ {{ $d->estimasi_pengerjaan ?? '-' }}</div>
+                                    <div class="text-xs text-gray-400">🛠 {{ $d->estimasi_pengerjaan ?? '-' }}</div>
                                     <div class="text-xs text-gray-500 truncate max-w-xs" title="{{ $d->kelengkapan }}">📦 {{ $d->kelengkapan ?? '-' }}</div>
                                 </td>
                                 <td class="py-3 px-3 text-center">
