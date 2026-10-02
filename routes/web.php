@@ -57,17 +57,37 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 Route::middleware('auth')->group(function () {
 
+    // Form booking
     Route::get('/booking/{id}', [BookingController::class, 'create'])
         ->name('booking.create');
 
+
+    // Simpan booking
     Route::post('/booking/store', [BookingController::class, 'store'])
         ->name('booking.store');
 
+
+    // Riwayat pesanan
     Route::get('/riwayat-pesanan', [BookingController::class, 'index'])
         ->name('booking.riwayat');
 
-    Route::post('/booking/{id}/upload-pembayaran', [BookingController::class, 'uploadPembayaran'])
-        ->name('booking.uploadPembayaran');
+
+    // ======================================================
+    // QRIS
+    // ======================================================
+
+    Route::get('/qris/{id}', [BookingController::class, 'qris'])
+        ->name('booking.qris');
+
+
+    // ======================================================
+    // UPLOAD BUKTI PEMBAYARAN
+    // ======================================================
+
+    Route::post(
+        '/booking/{id}/upload-pembayaran',
+        [BookingController::class, 'uploadPembayaran']
+    )->name('booking.uploadPembayaran');
 });
 
 
@@ -77,7 +97,10 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->middleware('auth')->group(function () {
 
-    // Dashboard
+    // ======================================================
+    // DASHBOARD
+    // ======================================================
+
     Route::get('/dashboard', [AdminController::class, 'dashboard'])
         ->name('admin.dashboard');
 
@@ -86,19 +109,22 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // PEMBAYARAN
     // ======================================================
 
-    // Daftar pembayaran
     Route::get('/pembayaran', [AdminController::class, 'pembayaranIndex'])
         ->name('admin.pembayaran.index');
 
 
     // Lihat bukti pembayaran
-    Route::get('/pembayaran/bukti/{filename}', [AdminController::class, 'lihatBuktiPembayaran'])
-        ->name('admin.pembayaran.bukti');
+    Route::get(
+        '/pembayaran/bukti/{filename}',
+        [AdminController::class, 'lihatBuktiPembayaran']
+    )->name('admin.pembayaran.bukti');
 
 
     // Verifikasi pembayaran
-    Route::post('/pembayaran/{id}/verifikasi', [AdminController::class, 'verifikasiPembayaran'])
-        ->name('admin.pembayaran.verifikasi');
+    Route::post(
+        '/pembayaran/{id}/verifikasi',
+        [AdminController::class, 'verifikasiPembayaran']
+    )->name('admin.pembayaran.verifikasi');
 
 
     // ======================================================
@@ -113,20 +139,28 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // LAYANAN
     // ======================================================
 
-    Route::post('/layanan', [AdminController::class, 'storeLayanan'])
-        ->name('admin.layanan.store');
+    Route::post(
+        '/layanan',
+        [AdminController::class, 'storeLayanan']
+    )->name('admin.layanan.store');
 
-    Route::delete('/layanan/{id}', [AdminController::class, 'destroyLayanan'])
-        ->name('admin.layanan.destroy');
+    Route::delete(
+        '/layanan/{id}',
+        [AdminController::class, 'destroyLayanan']
+    )->name('admin.layanan.destroy');
 
 
     // ======================================================
     // DEKORASI
     // ======================================================
 
-    Route::post('/dekorasi', [AdminController::class, 'storeDekorasi'])
-        ->name('admin.dekorasi.store');
+    Route::post(
+        '/dekorasi',
+        [AdminController::class, 'storeDekorasi']
+    )->name('admin.dekorasi.store');
 
-    Route::delete('/dekorasi/{id}', [AdminController::class, 'destroyDekorasi'])
-        ->name('admin.dekorasi.destroy');
+    Route::delete(
+        '/dekorasi/{id}',
+        [AdminController::class, 'destroyDekorasi']
+    )->name('admin.dekorasi.destroy');
 });
