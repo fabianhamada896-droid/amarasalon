@@ -35,7 +35,10 @@ class AdminController extends Controller
         ));
     }
 
-    // Aksi Admin: Halaman Daftar Pembayaran
+
+    // ==================== PEMBAYARAN ====================
+
+    // Halaman daftar pembayaran
     public function pembayaranIndex()
     {
         $pembayarans = Pembayaran::with('booking')
@@ -45,7 +48,31 @@ class AdminController extends Controller
         return view('admin.pembayaran', compact('pembayarans'));
     }
 
-    // Aksi Admin: Konfirmasi atau Tolak Pembayaran
+
+    // ==========================================================
+    // MENAMPILKAN BUKTI PEMBAYARAN
+    // ==========================================================
+    public function lihatBuktiPembayaran($filename)
+    {
+        // Lokasi file di disk public
+        $path = 'bukti_pembayaran/' . $filename;
+
+        // Cek apakah file ada
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404, 'Bukti pembayaran tidak ditemukan.');
+        }
+
+        // Ambil lokasi file sebenarnya
+        $filePath = Storage::disk('public')->path($path);
+
+        // Tampilkan file langsung di browser
+        return response()->file($filePath);
+    }
+
+
+    // ==========================================================
+    // KONFIRMASI / TOLAK PEMBAYARAN
+    // ==========================================================
     public function verifikasiPembayaran(Request $request, $id)
     {
         $request->validate([
@@ -96,10 +123,12 @@ class AdminController extends Controller
             }
         }
 
-        return redirect()->back()->with(
-            'success',
-            'Status pembayaran dan booking berhasil diperbarui!'
-        );
+        return redirect()
+            ->back()
+            ->with(
+                'success',
+                'Status pembayaran dan booking berhasil diperbarui!'
+            );
     }
 
 
