@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Models\Layanan;
 use App\Models\Dekorasi;
 use App\Models\Booking;
 use App\Models\Pembayaran;
+
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
+
 class BookingController extends Controller
 {
+
     // ==========================================================
     // FORM BOOKING
     // ==========================================================
@@ -20,6 +24,7 @@ class BookingController extends Controller
     {
         // Cek tipe booking
         $tipe = $request->query('type', 'layanan');
+
 
         if ($tipe == 'dekorasi') {
 
@@ -37,8 +42,10 @@ class BookingController extends Controller
             $item->kategori_item = $item->kategori;
         }
 
+
         return view('booking', compact('item', 'tipe'));
     }
+
 
 
     // ==========================================================
@@ -47,6 +54,7 @@ class BookingController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi
         $request->validate([
             'id_item' => 'required',
             'tipe' => 'required',
@@ -54,35 +62,59 @@ class BookingController extends Controller
             'catatan' => 'nullable|string',
         ]);
 
-        // Ambil harga berdasarkan tipe
+
+        // ======================================================
+        // AMBIL HARGA BERDASARKAN TIPE
+        // ======================================================
+
         if ($request->tipe == 'dekorasi') {
 
             $item = Dekorasi::findOrFail($request->id_item);
+
             $harga = $item->harga;
 
         } else {
 
             $item = Layanan::findOrFail($request->id_item);
+
             $harga = $item->harga;
         }
 
-        // Buat booking
-        Booking::create([
+
+        // ======================================================
+        // BUAT BOOKING
+        // ======================================================
+
+        $booking = Booking::create([
+
             'kode_booking' => 'AMR' . rand(100, 999),
+
             'id_user' => Auth::id(),
+
             'tanggal_booking' => $request->tanggal_acara,
+
             'jam_booking' => '10:00:00',
+
             'total_harga' => $harga,
+
             'jumlah_dp' => 0,
+
             'sisa_pembayaran' => $harga,
+
             'status_booking' => 'Menunggu',
+
             'catatan' => $request->catatan,
         ]);
 
+
+        // ======================================================
+        // LANGSUNG KE HALAMAN QRIS
+        // ======================================================
+
         return redirect()
-            ->route('booking.riwayat')
-            ->with('success', 'Booking berhasil dibuat!');
+            ->route('booking.qris', $booking->id_booking);
     }
+
 
 
     // ==========================================================
@@ -96,8 +128,10 @@ class BookingController extends Controller
             ->latest()
             ->get();
 
+
         return view('riwayat', compact('bookings'));
     }
+
 
 
     // ==========================================================
@@ -106,27 +140,30 @@ class BookingController extends Controller
 
     public function qris($id)
     {
-        /*
-        |--------------------------------------------------------------------------
-        | Cari booking
-        |--------------------------------------------------------------------------
-        | Hanya booking milik user yang sedang login yang boleh dibuka.
-        |--------------------------------------------------------------------------
-        */
+        // ======================================================
+        // CARI BOOKING
+        // ======================================================
+
+        // Hanya booking milik user yang login
+        // yang boleh membuka halaman QRIS
 
         $booking = Booking::where('id_booking', $id)
             ->where('id_user', Auth::id())
             ->firstOrFail();
 
-        /*
-        |--------------------------------------------------------------------------
-        | Ambil pembayaran
-        |--------------------------------------------------------------------------
-        */
+
+        // ======================================================
+        // AMBIL PEMBAYARAN TERAKHIR
+        // ======================================================
 
         $pembayaran = $booking->pembayarans()
             ->latest()
             ->first();
+
+
+        // ======================================================
+        // TAMPILKAN HALAMAN QRIS
+        // ======================================================
 
         return view('qris', compact(
             'booking',
@@ -135,36 +172,43 @@ class BookingController extends Controller
     }
 
 
+
     // ==========================================================
     // UPLOAD BUKTI PEMBAYARAN
     // ==========================================================
 
     public function uploadPembayaran(Request $request, $id)
     {
+        // ======================================================
+        // VALIDASI FILE
+        // ======================================================
+
         $request->validate([
             'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Pastikan booking milik user yang sedang login
-        |--------------------------------------------------------------------------
-        */
+
+        // ======================================================
+        // CARI BOOKING
+        // ======================================================
 
         $booking = Booking::where('id_booking', $id)
             ->where('id_user', Auth::id())
             ->firstOrFail();
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | Upload file
-        |--------------------------------------------------------------------------
-        */
+        // ======================================================
+        // CEK FILE
+        // ======================================================
 
         if ($request->hasFile('bukti_pembayaran')) {
 
             $file = $request->file('bukti_pembayaran');
+
+
+            // ==================================================
+            // BUAT NAMA FILE
+            // ==================================================
 
             $filename =
                 time()
@@ -174,12 +218,9 @@ class BookingController extends Controller
                 . $file->getClientOriginalExtension();
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | Simpan ke:
-            | storage/app/public/bukti_pembayaran/
-            |--------------------------------------------------------------------------
-            */
+            // ==================================================
+            // SIMPAN FILE
+            // ==================================================
 
             $file->storeAs(
                 'bukti_pembayaran',
@@ -188,34 +229,41 @@ class BookingController extends Controller
             );
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | Simpan pembayaran ke database
-            |--------------------------------------------------------------------------
-            */
+            // ==================================================
+            // SIMPAN PEMBAYARAN KE DATABASE
+            // ==================================================
 
             Pembayaran::create([
+
                 'id_booking' => $booking->id_booking,
+
                 'jumlah_bayar' => $booking->total_harga,
+
                 'metode_pembayaran' => 'QRIS',
+
                 'jenis_pembayaran' => 'DP',
+
                 'bukti_pembayaran' => $filename,
+
                 'tanggal_bayar' => now(),
+
                 'status_pembayaran' => 'Pending',
             ]);
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | Update status booking
-            |--------------------------------------------------------------------------
-            */
+            // ==================================================
+            // UPDATE STATUS BOOKING
+            // ==================================================
 
             $booking->update([
                 'status_booking' => 'Menunggu',
             ]);
         }
 
+
+        // ======================================================
+        // KEMBALI KE RIWAYAT
+        // ======================================================
 
         return redirect()
             ->route('booking.riwayat')

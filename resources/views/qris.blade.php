@@ -255,7 +255,7 @@
                                 class="bg-white border-2 border-gray-200 rounded-2xl p-4">
 
                                 <img
-                                    src="{{ asset('images/qris/qris.png') }}"
+                                    src="{{ asset('storage/qris/qris.jpeg') }}"
                                     alt="QRIS Amara Salon & Dekor"
                                     class="w-full max-w-xs mx-auto object-contain">
 

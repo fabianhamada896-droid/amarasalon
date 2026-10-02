@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BookingController;
@@ -57,17 +58,26 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 Route::middleware('auth')->group(function () {
 
-    // Form booking
+    // ======================================================
+    // FORM BOOKING
+    // ======================================================
+
     Route::get('/booking/{id}', [BookingController::class, 'create'])
         ->name('booking.create');
 
 
-    // Simpan booking
+    // ======================================================
+    // SIMPAN BOOKING
+    // ======================================================
+
     Route::post('/booking/store', [BookingController::class, 'store'])
         ->name('booking.store');
 
 
-    // Riwayat pesanan
+    // ======================================================
+    // RIWAYAT PESANAN
+    // ======================================================
+
     Route::get('/riwayat-pesanan', [BookingController::class, 'index'])
         ->name('booking.riwayat');
 
@@ -114,6 +124,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 
     // Lihat bukti pembayaran
+
     Route::get(
         '/pembayaran/bukti/{filename}',
         [AdminController::class, 'lihatBuktiPembayaran']
@@ -121,6 +132,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
 
     // Verifikasi pembayaran
+
     Route::post(
         '/pembayaran/{id}/verifikasi',
         [AdminController::class, 'verifikasiPembayaran']
