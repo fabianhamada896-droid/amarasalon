@@ -20,7 +20,7 @@ class AmaraSeeder extends Seeder
             'deskripsi' => 'Free Softlens.',
             'harga' => 1000000,
             'durasi' => 120,
-            'foto' => 'layanan/layanan1.png', // Sesuaikan dengan nama file di storage/app/public/layanan/
+            'foto' => 'layanan/kawin1.jpg', // Sesuaikan dengan nama file di storage/app/public/layanan/
         ]);
 
         Layanan::create([
@@ -29,7 +29,7 @@ class AmaraSeeder extends Seeder
             'deskripsi' => 'Penataan rambut profesional untuk acara wisuda, pesta, atau kondangan dengan hasil tahan lama.',
             'harga' => 200000,
             'durasi' => 60,
-            'foto' => 'layanan/layanan2.png',
+            'foto' => 'layanan/rambut.jpg',
         ]);
 
         // 2. Daftar list dekorasi (tambahkan 'foto')
@@ -39,7 +39,7 @@ class AmaraSeeder extends Seeder
             'deskripsi' => 'Dekorasi
             Makeup.',
             'harga' => 1000000,
-            'foto' => 'dekorasi/dekorasi2.png', // Sesuaikan dengan nama file di storage/app/public/dekorasi/
+            'foto' => 'dekorasi/paket1.jpg', // Sesuaikan dengan nama file di storage/app/public/dekorasi/
         ]);
 
         Dekorasi::create([
@@ -49,7 +49,7 @@ class AmaraSeeder extends Seeder
             Makeup
             Satu Set Alat Parasmanan.',
             'harga' => 2000000,
-            'foto' => 'dekorasi/dekorasi2.png',
+            'foto' => 'dekorasi/paket2.jpg',
         ]);
 
          Dekorasi::create([
@@ -57,7 +57,7 @@ class AmaraSeeder extends Seeder
             'jenis_dekorasi' => 'Akad Nikah',
             'deskripsi' => 'Dekorasi,Pelaminan 6meter,Makeup Pengantin,Satu Pasang Baju Akad,Siger Aksesoris Melati,Set Alat Parasmanan dan Alat Makan 100,Hena dan Nail Art,Free Softlens.',
             'harga' => 2000000,
-            'foto' => 'dekorasi/dekorasi2.png',
+            'foto' => 'dekorasi/paket3.jpg',
         ]);
     }
 }
